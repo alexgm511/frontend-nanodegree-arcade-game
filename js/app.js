@@ -1,9 +1,33 @@
-// Random number function to vary enemy position and speed 
-var randNum = function(topNum) {
-	var num = Math.floor((Math.random() * topNum) + 1);
-	return num;
+function getSpeed() {
+	// Use a random number to assign the lane and speed of enemy
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+	//return Math.random() * (max - min) + min;
+	var speed = Math.floor(Math.random() * (600-180)) + 180;
+	return speed;
 }
 
+function getLane() {
+	// Use random number from 1 to 3 to assign a lane to enemy
+	// multiply that by lane height and 
+	// last number adjusts enemy to right position on y axis.
+	var lane = Math.floor((Math.random() * 3) + 1) * 83 - 20;
+	return lane;
+}
+
+	//Agorithm to detect collision in 2D games from https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+function collision(pX, pY, eX, eY) {
+	var playerRect = {x: pX, y: pY, width: 68, height: 76}
+	var enemyRect = {x: eX, y: eY, width: 100, height: 68}
+
+	if (playerRect.x < enemyRect.x + enemyRect.width &&
+	   playerRect.x + playerRect.width > enemyRect.x &&
+	   playerRect.y < enemyRect.y + enemyRect.height &&
+	   playerRect.height + playerRect.y > enemyRect.y) {
+		// collision detected!
+		player.home();
+	}
+
+}
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -13,9 +37,11 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+	// Position enemy just outside the canvas
 	this.x = -101;
-	this.y = (randNum(3)+1) * 101;
-	this.speed = randNum(100);
+	this.y = getLane();
+	this.speed = getSpeed();
+
 }
 
 // Update the enemy's position, required method for game
@@ -24,9 +50,14 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+	// If ouside the canvas send back to beginning, else move along
+	
 	if (this.x > 505 + 101) {
 		this.x = -101;
+		this.y = getLane();
+		this.speed = getSpeed();
 	} else {
+		collision(player.x + 30, player.y, this.x, this.y);
 		this.x += (this.speed * dt);
 	}
 }
@@ -42,12 +73,11 @@ Enemy.prototype.render = function() {
 var Player = function() {
 	//player built following Enemy class provided
 	this.sprite = 'images/char-boy.png';
-	this.x = 2 * 101;
-	this.y = 4 * 101;
+	this.home();
 }
 
 Player.prototype.update = function() {
-	// pos variable will be updated here and multiplied by dt parameter
+
 }
 
 	// Draw player on the screen
@@ -56,27 +86,44 @@ Player.prototype.render = function() {
 }
 
 Player.prototype.handleInput = function(key) {
-	console.log(key);
-	switch (key) {
-		case 37:
+
+	switch ( key ) {
+		case "left":
 			//move left
-			this.posX -= 101;
+			if (this.x > 100) 
+				this.x -= 101;
 			break;
-		case 38:
+		case "up":
 			//move up
-			this.posY -= 101;
+			if (this.y > 138) {
+				this.y -= 83;
+			} else {
+				// if player reaches water, go back home
+				this.home();
+			}
 			break;
-		case 39:
+		case "right":
 			//move right
-			this.posX += 101;
+			if (this.x < 404) 
+				this.x += 101;
 			break;
-		case 37:
+		case "down":
 			//move down
-			this.posY += 101;
+			if (this.y < 354)
+				player.y += 83;
 			break;
 	}
-	
+	//console.log('X= '+this.x);
+	//console.log('Y= '+this.y);
+
 }
+
+	// Function that returns player to home base
+Player.prototype.home = function() {
+	this.x = 2 * 101;
+	this.y = 5 * 83 - 25;
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -101,6 +148,6 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-console.log(e.keyCode +' hello');
+
     player.handleInput(allowedKeys[e.keyCode]);
 });

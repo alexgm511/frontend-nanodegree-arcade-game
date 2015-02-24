@@ -3,6 +3,7 @@ var myEnemySprite = 'images/enemy-bug.png';
 var myPlayerSprite = 'images/char-boy.png';
 var homeX = 2 * 101;
 var homeY = 5 * 83 - 25;
+var count = 0;
 
 function getLane() {
 	// Use random number from 1 to 3 to assign a lane to enemy
@@ -25,7 +26,19 @@ function collision(pX, pY, eX, eY) {
 		// collision detected!
 		player.home();
 	}
+}
 
+	// Display "Splash" and a counter on reaching the water
+function splash(cnt) {
+	ctx.fillStyle = '#fff';
+	ctx.fillRect(325,0,180,45);
+
+	if (cnt > 0) {
+		ctx.fillStyle = '#06f';
+		ctx.font = '24px Chewy';
+		ctx.textAlign = 'center';
+		ctx.fillText('Splash! '+cnt, 404, 30);
+	}
 }
 
 	// Start with Sprite superclass with the 3 shared variables:
@@ -118,6 +131,9 @@ Player.prototype.handleInput = function(key) {
 			} else {
 				// if player reaches water, go back home
 				this.home();
+				// show some response
+				count ++;
+				splash(count);
 			}
 			break;
 		case "right":
@@ -130,6 +146,11 @@ Player.prototype.handleInput = function(key) {
 			if (this.y < 354)
 				player.y += 83;
 			break;
+		case "esc":
+			// Escape key resets the game
+			count = 0;
+			splash(count);
+			this.home();
 	}
 }
 
@@ -155,6 +176,7 @@ for (i=0; i < 3; i++) {
 
 var player = new Player(myPlayerSprite, homeX, homeY);
 
+
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
@@ -162,7 +184,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+		27: 'esc'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);

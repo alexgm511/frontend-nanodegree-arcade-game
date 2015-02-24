@@ -136,7 +136,8 @@ var Engine = (function(global) {
             }
         }
 
-
+		drawInstructions();
+		
         renderEntities();
     }
 
@@ -162,6 +163,20 @@ var Engine = (function(global) {
     function reset() {
         // noop
     }
+	
+	/* This function puts playing instructions on the top left of the canvas*/
+	function drawInstructions() {
+		ctx.fillStyle = '#999';
+		ctx.fillRect(0,0,320,40);
+		ctx.strokeColor = '#333';
+		ctx.strokeRect(0,0,320,40);
+		ctx.fillStyle = 'white';
+		ctx.font = '12px sans-serif';
+		ctx.textAlign = 'left';
+		ctx.fillText('Keyboard arrows move character up, down, left or right.', 5, 15);
+		ctx.fillText('Get to the water before getting run over! Esc resets game.', 5, 32);
+		
+	}
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when

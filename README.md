@@ -1,6 +1,7 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+The objective of the game is to get the character to the water before getting run over by the enemies speeding across.
+The character is moved up, down, left or right using the arrow keys on the keyboard.
 
-for self-checking their submission.
+The game consists of the index.html file, three javascript files: app.js, engine.js and resources.js, a style.css file and the image files that make up the game.  

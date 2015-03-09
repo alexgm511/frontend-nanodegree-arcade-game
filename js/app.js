@@ -21,13 +21,13 @@
 	        y: pY,
 	        width: 68,
 	        height: 76
-	    }
+	    };
 	    var eRect = {
 	        x: eX,
 	        y: eY,
 	        width: 100,
 	        height: 68
-	    }
+	    };
 
 	    if (pRect.x < eRect.x + eRect.width &&
 	        pRect.x + pRect.width > eRect.x &&
@@ -79,7 +79,7 @@
 
 	// Build out the Enemy subclass
 	var Enemy = function(mySprite, myX, myY) {
-	    Sprite.call(this, mySprite, myX, myY)
+	    Sprite.call(this, mySprite, myX, myY);
 	};
 
 	// Create the Enemy prototype to define the Enemy functions
@@ -90,7 +90,6 @@
 	Enemy.prototype.mySpeed = function() {
 	    // Use a random number to assign the lane and speed of enemy
 	    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-	    //return Math.random() * (max - min) + min;
 	    this.speed = Math.floor(Math.random() * (600 - 180)) + 180;
 	}
 
@@ -123,7 +122,7 @@
 
 	// Build out Player subclass
 	var Player = function(mySprite, myX, myY) {
-	    Sprite.call(this, mySprite, myX, myY)
+	    Sprite.call(this, mySprite, myX, myY);
 	};
 
 	Player.prototype = Object.create(Sprite.prototype);
